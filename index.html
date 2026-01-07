@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Guías Educativas AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .gradient-text {
+            background: linear-gradient(to right, #2563eb, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card-shadow { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); }
+        .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div class="max-w-2xl w-full bg-white rounded-2xl card-shadow overflow-hidden">
+        
+        <div class="bg-white p-8 border-b border-gray-100 text-center">
+            <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide">Herramienta Docente AI</span>
+            <h1 class="text-3xl font-bold mt-4 mb-2 text-gray-800">Generador de Prompts Educativos</h1>
+            <p class="text-gray-500">Crea guías de trabajo completas en segundos para ChatGPT o Gemini.</p>
+        </div>
+
+        <div class="p-8 space-y-6">
+            
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">🎓 Nivel Educativo</label>
+                <select id="grado" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-white text-gray-700">
+                    <option value="" disabled selected>Selecciona el grado...</option>
+                    <optgroup label="Primaria">
+                        <option value="1º Grado Primaria">1º Grado Primaria</option>
+                        <option value="2º Grado Primaria">2º Grado Primaria</option>
+                        <option value="3º Grado Primaria">3º Grado Primaria</option>
+                        <option value="4º Grado Primaria">4º Grado Primaria</option>
+                        <option value="5º Grado Primaria">5º Grado Primaria</option>
+                        <option value="6º Grado Primaria">6º Grado Primaria</option>
+                    </optgroup>
+                    <optgroup label="Secundaria / Tercer Ciclo">
+                        <option value="7º Grado / 1º Año Secundaria">7º Grado / 1º Año Secundaria</option>
+                        <option value="8º Grado / 2º Año Secundaria">8º Grado / 2º Año Secundaria</option>
+                        <option value="9º Grado / 3º Año Secundaria">9º Grado / 3º Año Secundaria</option>
+                    </optgroup>
+                    <optgroup label="Bachillerato / Preparatoria">
+                        <option value="1º Año Bachillerato">1º Año Bachillerato</option>
+                        <option value="2º Año Bachillerato">2º Año Bachillerato</option>
+                        <option value="3º Año Bachillerato">3º Año Bachillerato</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">📚 Materia</label>
+                <select id="materia" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-white text-gray-700">
+                    <option value="" disabled selected>Selecciona la materia...</option>
+                    <option value="Matemáticas">Matemáticas</option>
+                    <option value="Lenguaje y Literatura">Lenguaje y Literatura</option>
+                    <option value="Ciencias Naturales">Ciencias Naturales</option>
+                    <option value="Estudios Sociales / Historia">Estudios Sociales / Historia</option>
+                    <option value="Inglés">Inglés</option>
+                    <option value="Tecnología / Informática">Tecnología / Informática</option>
+                    <option value="Educación Artística">Educación Artística</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">💡 Tema Específico</label>
+                <input type="text" id="tema" placeholder="Ej: El Ciclo del Agua, Ecuaciones Lineales, Verbo To Be..." 
+                       class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+            </div>
+
+            <button onclick="generarPrompt()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg transform transition hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                Generar Prompt de Guía
+            </button>
+
+            <div id="resultArea" class="hidden mt-6 animate-fade-in">
+                <div class="flex justify-between items-end mb-2">
+                    <label class="text-sm font-semibold text-gray-600">🚀 Tu Prompt está listo:</label>
+                    <span id="copyFeedback" class="text-xs text-green-600 font-bold opacity-0 transition">¡Copiado!</span>
+                </div>
+                <div class="relative">
+                    <textarea id="promptOutput" readonly class="w-full h-48 p-4 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 font-mono resize-none focus:outline-none"></textarea>
+                    <button onclick="copiarPrompt()" class="absolute top-2 right-2 bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 text-xs font-bold py-1 px-3 rounded shadow-sm flex items-center gap-1 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        Copiar
+                    </button>
+                </div>
+                <p class="text-xs text-gray-400 mt-2 text-center">Pega este texto en ChatGPT o Gemini para obtener tu guía.</p>
+            </div>
+
+        </div>
+        
+        <div class="bg-gray-50 p-4 text-center border-t border-gray-100">
+            <p class="text-xs text-gray-400">Diseñado para potenciar la educación 🍎</p>
+        </div>
+    </div>
+
+    <script>
+        function generarPrompt() {
+            // 1. Obtener valores
+            const grado = document.getElementById('grado').value;
+            const materia = document.getElementById('materia').value;
+            const tema = document.getElementById('tema').value.trim();
+            const resultArea = document.getElementById('resultArea');
+            const output = document.getElementById('promptOutput');
+
+            // 2. Validación simple
+            if (!grado || !materia || !tema) {
+                alert("Por favor completa todos los campos (Grado, Materia y Tema) para generar un prompt de calidad.");
+                return;
+            }
+
+            // 3. Construcción del Prompt (Ingeniería de Prompts)
+            // Aquí está la "magia" pedagógica
+            const promptText = `Actúa como un desarrollador curricular y docente experto.
+Genera una GUÍA DE TRABAJO EDUCATIVA completa y lista para imprimir o usar en clase.
+
+📋 DATOS DE CONTEXTO:
+- Nivel: ${grado}
+- Materia: ${materia}
+- Tema Principal: ${tema}
+
+⚠️ INSTRUCCIONES PEDAGÓGICAS:
+- Adapta el lenguaje, el tono y la complejidad cognitiva específicamente para estudiantes de ${grado}.
+- El enfoque debe favorecer el aprendizaje activo y significativo.
+
+📘 ESTRUCTURA REQUERIDA DE LA GUÍA (Generar contenido académico para cada sección):
+
+1. OBJETIVO DE APRENDIZAJE:
+   - Redacta un objetivo claro y alcanzable para este tema y nivel.
+
+2. ACTIVIDAD 1: CONOCIMIENTOS (Opción Múltiple)
+   - Crea 5 preguntas de selección múltiple (A, B, C, D) sobre "${tema}".
+
+3. ACTIVIDAD 2: COMPRENSIÓN (Verdadero o Falso)
+   - Crea 5 enunciados para clasificar como verdaderos o falsos. Justifica brevemente las falsas.
+
+4. ACTIVIDAD 3: APLICACIÓN (Completar)
+   - Crea 5 oraciones o párrafos con espacios en blanco clave que el estudiante debe rellenar.
+
+5. ACTIVIDAD 4: ANÁLISIS (Pensamiento Crítico)
+   - Redacta 5 preguntas abiertas que requieran que el estudiante analice, opine o relacione el tema con su vida diaria (evitar respuestas de "sí/no").
+
+6. ACTIVIDAD 5: INVESTIGACIÓN (Expansión)
+   - Propone 5 pequeños temas o preguntas curiosas relacionadas con "${tema}" para que el estudiante investigue en casa o biblioteca.
+
+🏁 HOJA DE RESPUESTAS (SOLUCIONARIO):
+- Provee las respuestas correctas para las secciones 2, 3 y 4 al final del documento para uso del docente.`;
+
+            // 4. Mostrar resultado
+            output.value = promptText;
+            resultArea.classList.remove('hidden');
+            
+            // Scroll suave hacia el resultado
+            resultArea.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function copiarPrompt() {
+            const copyText = document.getElementById("promptOutput");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); /* Para móviles */
+            
+            navigator.clipboard.writeText(copyText.value).then(() => {
+                const feedback = document.getElementById('copyFeedback');
+                feedback.style.opacity = '1';
+                setTimeout(() => {
+                    feedback.style.opacity = '0';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
